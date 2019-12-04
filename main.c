@@ -148,7 +148,7 @@ void saveData(FILE *fptr, int noOfFood, char ** food, int * noOfTypes, char *** 
 {
     fprintf(fptr,"%d:\n",noOfFood);
     for(int i=0;i<noOfFood;i++){
-        fprintf(fptr,"%s: ",food[i]);
+        fprintf(fptr,"%s %d: ",food[i],noOfTypes[i]);
         for(int j=0;j<noOfTypes[i];j++){
             fprintf(fptr,"(%s - %.2lf)", types[i][j],prices[i][j]);
             if(j==noOfTypes[i]-1)
