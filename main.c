@@ -2,15 +2,15 @@
 #include<stdlib.h>
 
 #define MAX_FOOD_NAME 20
-#define MAX_TYPE_NAME 17
+#define MAX_TYPE_NAME 25
 #define MAX_DRINK_NAME 15
 #define MAX_LINE 10
 
 void readType(char * type);
 double returnPrice(char * line);
+void saveData(FILE *fptr, int noOfFood, char ** food, int * noOfTypes, char *** types, double ** prices, int noOfDrinks, char ** drinks, double * priceDrinks);
 
 int main() {
-
     //read no of food dishes
     int noOfFood;
     printf("Please input number of food types\n");
@@ -67,7 +67,7 @@ int main() {
         priceDrinks[i]=returnPrice(line);
     }
 
-    //display data
+    //display data on the console
     printf("The food data is: \n");
     for(int i=0;i<noOfFood;i++)
     {
@@ -91,6 +91,17 @@ int main() {
         if(i!=noOfDrinks-1)
             printf(", ");
     }
+
+    // open file
+    FILE *fptr;
+    fptr = fopen("D:\\CP\\food-data-provider\\data.txt","w");
+
+    if(fptr == NULL){
+        printf("Error!");
+        exit(1);
+    }
+    //save data to the file
+    saveData(fptr,noOfFood,food,noOfTypes,types,prices,noOfDrinks,drinks,priceDrinks);
 
     //free memory
     for(int i=0;i<noOfFood;i++){
@@ -132,4 +143,25 @@ double returnPrice(char * line){
         i++;
     }
     return price;
+}
+void saveData(FILE *fptr, int noOfFood, char ** food, int * noOfTypes, char *** types, double ** prices, int noOfDrinks, char ** drinks, double * priceDrinks)
+{
+    fprintf(fptr,"%d:\n",noOfFood);
+    for(int i=0;i<noOfFood;i++){
+        fprintf(fptr,"%s %d: ",food[i],noOfTypes[i]);
+        for(int j=0;j<noOfTypes[i];j++){
+            fprintf(fptr,"(%s - %.2lf)", types[i][j],prices[i][j]);
+            if(j==noOfTypes[i]-1)
+                fprintf(fptr,"\n");
+            else
+                fprintf(fptr," ");
+        }
+    }
+    fprintf(fptr,"%d:\n",noOfDrinks);
+    for(int i=0;i<noOfDrinks;i++){
+        fprintf(fptr,"(%s - %.0lf)",drinks[i],priceDrinks[i]);
+        if(i!=noOfDrinks-1)
+            fprintf(fptr,", ");
+    }
+    fclose(fptr);
 }
